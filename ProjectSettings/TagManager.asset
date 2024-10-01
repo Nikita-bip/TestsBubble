@@ -10,6 +10,7 @@ TagManager:
   - Limit
   - Bubble
   - Wall
+  - Throws
   layers:
   - Default
   - TransparentFX

@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ScoreManager
 {
-	private int score = 0;
-	private int throws = 0;
+	private int _score = 0;
+	private int _throws = 10;
+
 	public static ScoreManager instance;
 
 	public static ScoreManager GetInstance()
@@ -17,37 +16,44 @@ public class ScoreManager
 		return instance;
 	}
 
-	public void UpdateScoreUI()
+    private void UpdateScoreUI()
 	{
 		Text _score = GameObject.FindWithTag("Score").GetComponent<Text>();
-		_score.text = $"Score: {score}";
+		_score.text = $"Score: {this._score}";
 	}
 
-	public void AddScore(int score)
+    private void UpdateThrowsUI()
+    {
+        Text _throws = GameObject.FindWithTag("Throws").GetComponent<Text>();
+        _throws.text = $"{this._throws}";
+    }
+
+    public void AddScore(int score)
 	{
-		this.score += score;
+		this._score += score;
 		UpdateScoreUI();
 	}
 
 	public int GetScore()
 	{
-		return score;
+		return _score;
 	}
 
-	public void AddThrows()
+	public void ReduceThrows()
 	{
-		throws++;
-	}
+		_throws--;
+		UpdateThrowsUI();
+    }
 
 	public int GetThrows()
 	{
-		return throws;
+		return _throws;
 	}
 
 	public void Reset()
 	{
-		score = 0;
-		throws = 0;
+		_score = 0;
+		_throws = 10;
 		UpdateScoreUI();
 	}
 }

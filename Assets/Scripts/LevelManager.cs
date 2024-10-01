@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(Grid))]
 public class LevelManager : MonoBehaviour
 {
     #region Singleton
@@ -19,49 +19,49 @@ public class LevelManager : MonoBehaviour
     }
     #endregion
 
-    public Vector3 startPosition;
-    public Grid grid;
-    public List<GameObject> bubblesPrefabs;
-    public Transform bubblesArea;
-    public GameObject ballPrefab1;
-    public GameObject ballPrefab2;
-    public GameObject ballPrefab3;
-    public GameObject ballPrefab4;
+    [SerializeField] private Vector3 _startPosition;
+    [SerializeField] private List<GameObject> _bubblesPrefabs;
+    [SerializeField] private GameObject _ballPrefab1;
+    [SerializeField] private GameObject _ballPrefab2;
+    [SerializeField] private GameObject _ballPrefab3;
+    [SerializeField] private GameObject _ballPrefab4;
 
-    public string filePath = "Assets/Resources/Level.txt"; // Путь к текстовому файлу
-    public Dictionary<char, GameObject> prefabDictionary;
+    public Transform bubblesArea;
     public List<GameObject> bubblesInScene;
     public List<string> colorsInScene;
 
+    private string _filePath = "Assets/Resources/Level.txt"; // Путь к текстовому файлу
+    private Dictionary<char, GameObject> prefabDictionary;
+    private Grid _grid;
 
     private void Start()
     {
         prefabDictionary = new Dictionary<char, GameObject>
     {
-        { '1', ballPrefab1 },
-        { '2', ballPrefab2 },
-        { '3', ballPrefab3 },
-        { '4', ballPrefab4 },
+        { '1', _ballPrefab1 },
+        { '2', _ballPrefab2 },
+        { '3', _ballPrefab3 },
+        { '4', _ballPrefab4 },
     };
 
-        grid = GetComponent<Grid>();
+        _grid = GetComponent<Grid>();
         StartCoroutine(LoadLevel());
     }
 
-    IEnumerator LoadLevel()
+    private IEnumerator LoadLevel()
     {
         yield return new WaitForSeconds(0.1f);
 
-        GenerateField(startPosition);
+        GenerateField(_startPosition);
 
         SnapChildrensToGrid(bubblesArea);
         UpdateListOfBubblesInScene();
         GameManager.instance.shootScript.CreateNewBubbles();
     }
 
-    public void GenerateField(Vector3 startPosition)
+    private void GenerateField(Vector3 startPosition)
     {
-        string[] lines = File.ReadAllLines(filePath);
+        string[] lines = File.ReadAllLines(_filePath);
 
         for (int y = 0; y < lines.Length; y++)
         {
@@ -70,31 +70,31 @@ public class LevelManager : MonoBehaviour
             for (int x = 0; x < line.Length; x++)
             {
                 char currentChar = line[x];
-                if (prefabDictionary.ContainsKey(currentChar)) // Проверка наличия префаба для текущего символа
+
+                if (prefabDictionary.ContainsKey(currentChar))
                 {
-                    Vector3 position = new Vector3(x * 25, -y * 25, 0) + startPosition; // Позиция объекта
-                    GameObject prefab = prefabDictionary[currentChar]; // Получение префаба из словаря
+                    Vector3 position = new Vector3(x * 25, -y * 25, 0) + startPosition;
+                    GameObject prefab = prefabDictionary[currentChar];
                     Instantiate(prefab, position, Quaternion.identity, bubblesArea);
-                    Debug.Log($"Spawned {currentChar} at {position}");
                 }
             }
         }
     }
 
     #region Snap to Grid
-    private void SnapChildrensToGrid(Transform parent)
+    private void SnapChildrensToGrid(Transform bubbleArea)
     {
-        foreach (Transform t in parent)
+        foreach (Transform bubble in bubbleArea)
         {
-            SnapToNearestGripPosition(t);
+            SnapToNearestGripPosition(bubble);
         }
     }
 
-    public void SnapToNearestGripPosition(Transform t)
+    private void SnapToNearestGripPosition(Transform bubble)
     {
-        Vector3Int cellPosition = grid.WorldToCell(t.position);
-        t.position = grid.GetCellCenterWorld(cellPosition);
-        t.rotation = Quaternion.identity;
+        Vector3Int cellPosition = _grid.WorldToCell(bubble.position);
+        bubble.position = _grid.GetCellCenterWorld(cellPosition);
+        bubble.rotation = Quaternion.identity;
 
     }
     #endregion
@@ -104,14 +104,15 @@ public class LevelManager : MonoBehaviour
         List<string> colors = new List<string>();
         List<GameObject> newListOfBubbles = new List<GameObject>();
 
-        foreach (Transform t in bubblesArea)
+        foreach (Transform bubble in bubblesArea)
         {
-            Bubble bubbleScript = t.GetComponent<Bubble>();
-            if (colors.Count < bubblesPrefabs.Count && !colors.Contains(bubbleScript.bubbleColor.ToString()))
+            Bubble bubbleScript = bubble.GetComponent<Bubble>();
+
+            if (colors.Count < _bubblesPrefabs.Count && !colors.Contains(bubbleScript.bubbleColor.ToString()))
             {
                 string color = bubbleScript.bubbleColor.ToString();
 
-                foreach (GameObject prefab in bubblesPrefabs)
+                foreach (GameObject prefab in _bubblesPrefabs)
                 {
                     if (color.Equals(prefab.GetComponent<Bubble>().bubbleColor.ToString()))
                     {
@@ -125,6 +126,7 @@ public class LevelManager : MonoBehaviour
         colorsInScene = colors;
         bubblesInScene = newListOfBubbles;
     }
+
     public void SetAsBubbleAreaChild(Transform bubble)
     {
         SnapToNearestGripPosition(bubble);

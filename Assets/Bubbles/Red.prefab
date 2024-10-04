@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 8501270715993923510}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 34, y: 34, z: 1}
+  m_LocalScale: {x: 38, y: 38, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -114,8 +114,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f82c0d51bb10bf4ba81fd6d4b22703f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycastRange: 18
-  raycastOffset: 19
   isFixed: 1
   isConnected: 1
   bubbleColor: 2

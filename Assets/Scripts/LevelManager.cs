@@ -125,6 +125,8 @@ public class LevelManager : MonoBehaviour
 
         colorsInScene = colors;
         bubblesInScene = newListOfBubbles;
+
+        CheckWinCondition();
     }
 
     public void SetAsBubbleAreaChild(Transform bubble)
@@ -132,4 +134,75 @@ public class LevelManager : MonoBehaviour
         SnapToNearestGripPosition(bubble);
         bubble.SetParent(bubblesArea);
     }
+
+    private void CheckWinCondition()
+    {
+        // Здесь получаем количество шариков в первом ряду
+        List<Transform> firstRowBubbles = new List<Transform>();
+        int totalBubbles = 0;
+
+        // Получаем строки уровня из файла
+        string[] lines = File.ReadAllLines(_filePath);
+
+        // Определяем индекс первого ряда (с нуля)
+        string firstLine = lines[0];
+        Debug.Log($"Позиция {firstLine}");
+
+        for (int x = 0; x < firstLine.Length; x++)
+        {
+            char currentChar = firstLine[x];
+
+            if (prefabDictionary.ContainsKey(currentChar))
+            {
+                totalBubbles++;
+                // Вместо _grid.CellCountY используем lines.Length
+                Vector3 position = new Vector3((x * 25 + _startPosition.x + 2.5f), 137.5f, 0.5f);
+                Transform bubble = FindBubbleAtPosition(position);
+                Debug.Log($"Позиция {position}");
+
+                if (bubble != null)
+                {
+                    firstRowBubbles.Add(bubble);
+                }
+            }
+        }
+
+        Debug.Log($"{firstRowBubbles.Count}");
+        Debug.Log($"{totalBubbles}");
+        // Проверяем соотношение
+        if (firstRowBubbles.Count < totalBubbles * 0.3f)
+        {
+            // Условие выигрыша выполнено
+            Debug.Log("Выиграл");
+            RemoveRemainingBubbles();
+        }
+    }
+
+    private Transform FindBubbleAtPosition(Vector3 position)
+    {
+        // Этот метод ищет шарик по указанной позиции
+        foreach (Transform bubble in bubblesArea)
+        {
+            if (bubble.position == position)
+            {
+                return bubble;
+            }
+        }
+        
+        return null;
+    }
+
+    private void RemoveRemainingBubbles()
+    {
+        // Удаляем все остальные шарики в сцене
+        foreach (Transform bubble in bubblesArea)
+        {
+            Destroy(bubble.gameObject);
+        }
+
+        // Можно здесь вызвать дополнительное событие, например
+        // GameManager.instance.WinGame();
+    }
+
+
 }

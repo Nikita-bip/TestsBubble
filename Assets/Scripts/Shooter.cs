@@ -6,7 +6,7 @@ public class Shooter : MonoBehaviour
     [SerializeField] private float _speed = 400f;
     [SerializeField] private GameObject _bottomShootPoint;
     [SerializeField] private Transform _nextBubblePosition;
-    [SerializeField] private LineRenderer _lineRenderer; // Добавление LineRenderer
+    [SerializeField] private LineRenderer _lineRenderer;
 
     public bool CanShoot;
     private GameObject _currentBubble;

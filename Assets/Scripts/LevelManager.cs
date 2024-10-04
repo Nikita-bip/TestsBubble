@@ -82,7 +82,6 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    #region Snap to Grid
     private void SnapChildrensToGrid(Transform BubbleArea)
     {
         foreach (Transform bubble in BubbleArea)
@@ -98,7 +97,6 @@ public class LevelManager : MonoBehaviour
         bubble.rotation = Quaternion.identity;
 
     }
-    #endregion
 
     public void UpdateListOfBubblesInScene()
     {

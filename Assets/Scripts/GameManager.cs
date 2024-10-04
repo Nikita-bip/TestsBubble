@@ -184,8 +184,6 @@ public class GameManager : MonoBehaviour
         _isDissolving = true;
     }
 
-    #region Drop Disconected Bubbles
-
     private void ProcessDisconectedBubbles()
     {
         SetAllBubblesConnectionToFalse();
@@ -265,7 +263,6 @@ public class GameManager : MonoBehaviour
         _bubblesToDrop.Clear();
     }
 
-    #endregion
     public void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

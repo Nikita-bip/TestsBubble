@@ -6,14 +6,14 @@ public class ScoreManager
 	private int _score = 0;
 	private int _throws = 10;
 
-	public static ScoreManager instance;
+	public static ScoreManager Instance;
 
 	public static ScoreManager GetInstance()
 	{
-		if (instance == null)
-			instance = new ScoreManager();
+		if (Instance == null)
+			Instance = new ScoreManager();
 
-		return instance;
+		return Instance;
 	}
 
     private void UpdateScoreUI()
@@ -48,12 +48,5 @@ public class ScoreManager
 	public int GetThrows()
 	{
 		return _throws;
-	}
-
-	public void Reset()
-	{
-		_score = 0;
-		_throws = 10;
-		UpdateScoreUI();
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
+using UnityEngine;
 
 [RequireComponent(typeof(Grid))]
 public class LevelManager : MonoBehaviour
@@ -25,18 +25,19 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject _ballPrefab2;
     [SerializeField] private GameObject _ballPrefab3;
     [SerializeField] private GameObject _ballPrefab4;
+    [SerializeField] private GameObject _winMenu;
 
-    public Transform bubblesArea;
-    public List<GameObject> bubblesInScene;
-    public List<string> colorsInScene;
+    public Transform BubblesArea;
+    public List<GameObject> BubblesInScene;
+    public List<string> ColorsInScene;
 
     private string _filePath = "Assets/Resources/Level.txt"; // Путь к текстовому файлу
-    private Dictionary<char, GameObject> prefabDictionary;
+    private Dictionary<char, GameObject> _prefabDictionary;
     private Grid _grid;
 
     private void Start()
     {
-        prefabDictionary = new Dictionary<char, GameObject>
+        _prefabDictionary = new Dictionary<char, GameObject>
     {
         { '1', _ballPrefab1 },
         { '2', _ballPrefab2 },
@@ -54,9 +55,9 @@ public class LevelManager : MonoBehaviour
 
         GenerateField(_startPosition);
 
-        SnapChildrensToGrid(bubblesArea);
+        SnapChildrensToGrid(BubblesArea);
         UpdateListOfBubblesInScene();
-        GameManager.instance.shootScript.CreateNewBubbles();
+        GameManager.Instance.shootScript.CreateNewBubbles();
     }
 
     private void GenerateField(Vector3 startPosition)
@@ -71,20 +72,20 @@ public class LevelManager : MonoBehaviour
             {
                 char currentChar = line[x];
 
-                if (prefabDictionary.ContainsKey(currentChar))
+                if (_prefabDictionary.ContainsKey(currentChar))
                 {
                     Vector3 position = new Vector3(x * 25, -y * 25, 0) + startPosition;
-                    GameObject prefab = prefabDictionary[currentChar];
-                    Instantiate(prefab, position, Quaternion.identity, bubblesArea);
+                    GameObject prefab = _prefabDictionary[currentChar];
+                    Instantiate(prefab, position, Quaternion.identity, BubblesArea);
                 }
             }
         }
     }
 
     #region Snap to Grid
-    private void SnapChildrensToGrid(Transform bubbleArea)
+    private void SnapChildrensToGrid(Transform BubbleArea)
     {
-        foreach (Transform bubble in bubbleArea)
+        foreach (Transform bubble in BubbleArea)
         {
             SnapToNearestGripPosition(bubble);
         }
@@ -104,7 +105,7 @@ public class LevelManager : MonoBehaviour
         List<string> colors = new List<string>();
         List<GameObject> newListOfBubbles = new List<GameObject>();
 
-        foreach (Transform bubble in bubblesArea)
+        foreach (Transform bubble in BubblesArea)
         {
             Bubble bubbleScript = bubble.GetComponent<Bubble>();
 
@@ -123,8 +124,8 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        colorsInScene = colors;
-        bubblesInScene = newListOfBubbles;
+        ColorsInScene = colors;
+        BubblesInScene = newListOfBubbles;
 
         CheckWinCondition();
     }
@@ -132,33 +133,25 @@ public class LevelManager : MonoBehaviour
     public void SetAsBubbleAreaChild(Transform bubble)
     {
         SnapToNearestGripPosition(bubble);
-        bubble.SetParent(bubblesArea);
+        bubble.SetParent(BubblesArea);
     }
 
     private void CheckWinCondition()
     {
-        // Здесь получаем количество шариков в первом ряду
         List<Transform> firstRowBubbles = new List<Transform>();
         int totalBubbles = 0;
-
-        // Получаем строки уровня из файла
         string[] lines = File.ReadAllLines(_filePath);
-
-        // Определяем индекс первого ряда (с нуля)
         string firstLine = lines[0];
-        Debug.Log($"Позиция {firstLine}");
 
         for (int x = 0; x < firstLine.Length; x++)
         {
             char currentChar = firstLine[x];
 
-            if (prefabDictionary.ContainsKey(currentChar))
+            if (_prefabDictionary.ContainsKey(currentChar))
             {
                 totalBubbles++;
-                // Вместо _grid.CellCountY используем lines.Length
                 Vector3 position = new Vector3((x * 25 + _startPosition.x + 2.5f), 137.5f, 0.5f);
                 Transform bubble = FindBubbleAtPosition(position);
-                Debug.Log($"Позиция {position}");
 
                 if (bubble != null)
                 {
@@ -167,21 +160,15 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"{firstRowBubbles.Count}");
-        Debug.Log($"{totalBubbles}");
-        // Проверяем соотношение
         if (firstRowBubbles.Count < totalBubbles * 0.3f)
         {
-            // Условие выигрыша выполнено
-            Debug.Log("Выиграл");
             RemoveRemainingBubbles();
         }
     }
 
     private Transform FindBubbleAtPosition(Vector3 position)
     {
-        // Этот метод ищет шарик по указанной позиции
-        foreach (Transform bubble in bubblesArea)
+        foreach (Transform bubble in BubblesArea)
         {
             if (bubble.position == position)
             {
@@ -194,15 +181,11 @@ public class LevelManager : MonoBehaviour
 
     private void RemoveRemainingBubbles()
     {
-        // Удаляем все остальные шарики в сцене
-        foreach (Transform bubble in bubblesArea)
+        foreach (Transform bubble in BubblesArea)
         {
             Destroy(bubble.gameObject);
         }
 
-        // Можно здесь вызвать дополнительное событие, например
-        // GameManager.instance.WinGame();
+        _winMenu.SetActive(true);
     }
-
-
 }

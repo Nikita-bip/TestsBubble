@@ -10,11 +10,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _winScore;
     [SerializeField] private Transform _bottomLimit;
 
-    public static GameManager instance;
+    public static GameManager Instance;
     public Shooter shootScript; // чекнуть и исправить
 
     private const int SEQUENCE_SIZE = 2;
-
+    private const string StrDissolve = "_DissolveAmount";
     private List<Transform> _sequenceBubbles;
     private List<Transform> _connectedBubbles;
     private List<Transform> _bubblesToDrop;
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 SpriteRenderer spriteRenderer = bubble.GetComponent<SpriteRenderer>();
-                float dissolveAmount = spriteRenderer.material.GetFloat("_DissolveAmount");
+                float dissolveAmount = spriteRenderer.material.GetFloat(StrDissolve);
 
                 if (dissolveAmount >= 0.99f)
                 {
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     float newDissolve = dissolveAmount + _dissolveSpeed * Time.deltaTime;
-                    spriteRenderer.material.SetFloat("_DissolveAmount", newDissolve);
+                    spriteRenderer.material.SetFloat(StrDissolve, newDissolve);
                 }
             }
         }
@@ -62,8 +62,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
+        if (Instance == null)
+            Instance = this;
 
         _winMenu.SetActive(false);
         _loseMenu.SetActive(false);
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
         _sequenceBubbles.Clear();
         LevelManager.instance.UpdateListOfBubblesInScene();
 
-        if (LevelManager.instance.bubblesInScene.Count == 0)
+        if (LevelManager.instance.BubblesInScene.Count == 0)
         {
             ScoreManager man = ScoreManager.GetInstance();
             _winScore.GetComponent<Text>().text = man.GetScore().ToString();
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
         else
         {
             shootScript.CreateNextBubble();
-            shootScript.canShoot = true;
+            shootScript.CanShoot = true;
         }
 
         ProcessBottomLimit();
@@ -124,12 +124,12 @@ public class GameManager : MonoBehaviour
 
     private void ProcessBottomLimit()
     {
-        foreach (Transform bubble in LevelManager.instance.bubblesArea)
+        foreach (Transform bubble in LevelManager.instance.BubblesArea)
         {
-            if (bubble.GetComponent<Bubble>().isConnected && bubble.position.y < _bottomLimit.position.y)
+            if (bubble.GetComponent<Bubble>().IsConnected && bubble.position.y < _bottomLimit.position.y)
             {
                 _loseMenu.SetActive(true);
-                shootScript.canShoot = false;
+                shootScript.CanShoot = false;
                 break;
             }
         }
@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
         if(currentThrows == 0)
         {
             _loseMenu.SetActive(true);
-            shootScript.canShoot = false;
+            shootScript.CanShoot = false;
         }
     }
 
@@ -196,9 +196,9 @@ public class GameManager : MonoBehaviour
 
     private void SetAllBubblesConnectionToFalse()
     {
-        foreach (Transform bubble in LevelManager.instance.bubblesArea)
+        foreach (Transform bubble in LevelManager.instance.BubblesArea)
         {
-            bubble.GetComponent<Bubble>().isConnected = false;
+            bubble.GetComponent<Bubble>().IsConnected = false;
         }
     }
 
@@ -220,7 +220,7 @@ public class GameManager : MonoBehaviour
         _connectedBubbles.Add(bubble);
 
         Bubble bubbleScript = bubble.GetComponent<Bubble>();
-        bubbleScript.isConnected = true;
+        bubbleScript.IsConnected = true;
 
         foreach (Transform t in bubbleScript.GetNeighbours())
         {
@@ -233,11 +233,11 @@ public class GameManager : MonoBehaviour
 
     private void CheckDisconectedBubbles()
     {
-        foreach (Transform bubble in LevelManager.instance.bubblesArea)
+        foreach (Transform bubble in LevelManager.instance.BubblesArea)
         {
             Bubble bubbleScript = bubble.GetComponent<Bubble>();
 
-            if (!bubbleScript.isConnected)
+            if (!bubbleScript.IsConnected)
             {
                 if (!_bubblesToDrop.Contains(bubble))
                 {

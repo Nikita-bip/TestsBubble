@@ -6,26 +6,26 @@ public class Bubble : MonoBehaviour
     private float _raycastRange = 18f;
     private float _raycastOffset = 19f;
 
-    public bool isFixed;
-    public bool isConnected;
+    public bool IsFixed;
+    public bool IsConnected;
     public BubbleColor bubbleColor;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if ((collision.gameObject.tag == "Bubble" && collision.gameObject.GetComponent<Bubble>().isFixed) || collision.gameObject.tag == "Limit")
+        if ((collision.gameObject.tag == "Bubble" && collision.gameObject.GetComponent<Bubble>().IsFixed) || collision.gameObject.tag == "Limit")
         {
-            if (!isFixed)
+            if (!IsFixed)
                 HasCollided();
         }
     }
 
     private void HasCollided()
     {
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        Destroy(rb);
-        isFixed = true;
+        Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
+        Destroy(rigidbody);
+        IsFixed = true;
         LevelManager.instance.SetAsBubbleAreaChild(transform);
-        GameManager.instance.ProcessTurn(transform);
+        GameManager.Instance.ProcessTurn(transform);
     }
 
     public List<Transform> GetNeighbours()
@@ -37,10 +37,6 @@ public class Bubble : MonoBehaviour
         hits.Add(Physics2D.Raycast(new Vector2(transform.position.x + _raycastOffset, transform.position.y), Vector3.right, _raycastRange));
         hits.Add(Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + _raycastOffset), Vector3.up, _raycastRange));
         hits.Add(Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - _raycastOffset), Vector3.down, _raycastRange));
-        //hits.Add(Physics2D.Raycast(new Vector2(transform.position.x - _raycastOffset, transform.position.y + _raycastOffset), new Vector2(-1f, 1f), _raycastRange));
-        //hits.Add(Physics2D.Raycast(new Vector2(transform.position.x - _raycastOffset, transform.position.y - _raycastOffset), new Vector2(-1f, -1f), _raycastRange));
-        //hits.Add(Physics2D.Raycast(new Vector2(transform.position.x + _raycastOffset, transform.position.y + _raycastOffset), new Vector2(1f, 1f), _raycastRange));
-        //hits.Add(Physics2D.Raycast(new Vector2(transform.position.x + _raycastOffset, transform.position.y - _raycastOffset), new Vector2(1f, -1f), _raycastRange));
 
         foreach (RaycastHit2D hit in hits)
         {

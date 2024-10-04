@@ -6,9 +6,9 @@ public class Shooter : MonoBehaviour
     [SerializeField] private float _speed = 400f;
     [SerializeField] private GameObject _bottomShootPoint;
     [SerializeField] private Transform _nextBubblePosition;
-    [SerializeField] private LineRenderer lineRenderer; // Добавление LineRenderer
+    [SerializeField] private LineRenderer _lineRenderer; // Добавление LineRenderer
 
-    public bool canShoot;
+    public bool CanShoot;
     private GameObject _currentBubble;
     private GameObject _nextBubble;
     private Vector2 _lookDirection;
@@ -27,16 +27,16 @@ public class Shooter : MonoBehaviour
         _lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         _lookAngle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg;
 
-        if (canShoot && Input.GetMouseButton(0))
+        if (CanShoot && Input.GetMouseButton(0))
         {
             CastRay(transform.position, _gizmosPoint);
         }
 
-        if (canShoot && Input.GetMouseButtonUp(0)
+        if (CanShoot && Input.GetMouseButtonUp(0)
             && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > _bottomShootPoint.transform.position.y)
             && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < _limit.transform.position.y))
         {
-            canShoot = false;
+            CanShoot = false;
             Shoot();
         }
     }
@@ -60,9 +60,9 @@ public class Shooter : MonoBehaviour
     private void CastRay(Vector2 pos, Vector2 dir)
     {
         int RayCount = 2;
-        lineRenderer.positionCount = RayCount;
+        _lineRenderer.positionCount = RayCount;
 
-        lineRenderer.SetPosition(0, pos);
+        _lineRenderer.SetPosition(0, pos);
 
         for (int i = 1; i < RayCount; i++)
         {
@@ -70,7 +70,7 @@ public class Shooter : MonoBehaviour
 
             if (hit.collider != null && hit.transform.tag.Equals("Wall"))
             {
-                lineRenderer.SetPosition(i, hit.point);
+                _lineRenderer.SetPosition(i, hit.point);
 
                 pos = hit.point - dir * 0.01f;
                 dir = Vector2.Reflect(dir, hit.normal);
@@ -78,12 +78,12 @@ public class Shooter : MonoBehaviour
                 if (RayCount < 5)
                 {
                     RayCount += 1;
-                    lineRenderer.positionCount = RayCount;
+                    _lineRenderer.positionCount = RayCount;
                 }
             }
             else if (hit.collider != null && hit.transform.tag.Equals("Bubble"))
             {
-                lineRenderer.SetPosition(i, hit.point);
+                _lineRenderer.SetPosition(i, hit.point);
                 break;
             }
         }
@@ -100,13 +100,13 @@ public class Shooter : MonoBehaviour
         _nextBubble = null;
         _currentBubble = null;
         CreateNextBubble();
-        canShoot = true;
+        CanShoot = true;
     }
 
     public void CreateNextBubble()
     {
-        List<GameObject> bubblesInScene = LevelManager.instance.bubblesInScene;
-        List<string> colors = LevelManager.instance.colorsInScene;
+        List<GameObject> bubblesInScene = LevelManager.instance.BubblesInScene;
+        List<string> colors = LevelManager.instance.ColorsInScene;
 
         if (bubblesInScene.Count < 1)
             return;
@@ -130,7 +130,7 @@ public class Shooter : MonoBehaviour
         {
             GameObject newBubble = Instantiate(bubblesInScene[Random.Range(0, bubblesInScene.Count)]);
             newBubble.transform.position = _nextBubblePosition.position;
-            newBubble.GetComponent<Bubble>().isFixed = false;
+            newBubble.GetComponent<Bubble>().IsFixed = false;
             newBubble.GetComponent<CircleCollider2D>().enabled = false;
             Rigidbody2D rb2d = newBubble.AddComponent<Rigidbody2D>();
             rb2d.gravityScale = 0f;

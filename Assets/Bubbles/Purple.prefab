@@ -99,9 +99,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.008775711, y: 0.001595497}
+  m_Offset: {x: -0.003453054, y: 0.0079063615}
   serializedVersion: 2
-  m_Radius: 0.318
+  m_Radius: 0.29585046
 --- !u!114 &-2275224782301469843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +114,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f82c0d51bb10bf4ba81fd6d4b22703f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isFixed: 1
-  isConnected: 1
+  IsFixed: 1
+  IsConnected: 1
   bubbleColor: 3

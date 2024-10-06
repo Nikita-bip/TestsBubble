@@ -31,7 +31,7 @@ public class LevelManager : MonoBehaviour
     public List<GameObject> BubblesInScene;
     public List<string> ColorsInScene;
 
-    private string _filePath = "Assets/Resources/Level.txt"; // Путь к текстовому файлу
+    private string _filePath = "Assets/Resources/Level.txt";
     private Dictionary<char, GameObject> _prefabDictionary;
     private Grid _grid;
 

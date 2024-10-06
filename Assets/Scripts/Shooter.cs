@@ -21,25 +21,25 @@ public class Shooter : MonoBehaviour
         _limit = GameObject.FindGameObjectWithTag("Limit");
     }
 
-private void Update()
-{
-    _gizmosPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    _lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-    _lookAngle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg;
-
-    if (CanShoot && Input.GetMouseButton(0))
+    private void Update()
     {
-        CastRay(_currentBubble.transform.position, _gizmosPoint);
-    }
+        _gizmosPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        _lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        _lookAngle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg;
 
-    if (CanShoot && Input.GetMouseButtonUp(0)
-        && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > _bottomShootPoint.transform.position.y)
-        && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < _limit.transform.position.y))
-    {
-        CanShoot = false;
-        Shoot();
+        if (CanShoot && Input.GetMouseButton(0))
+        {
+            CastRay(_currentBubble.transform.position, _gizmosPoint);
+        }
+
+        if (CanShoot && Input.GetMouseButtonUp(0)
+            && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > _bottomShootPoint.transform.position.y)
+            && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < _limit.transform.position.y))
+        {
+            CanShoot = false;
+            Shoot();
+        }
     }
-}
 
     public void Shoot()
     {
@@ -62,7 +62,6 @@ private void Update()
         int RayCount = 2;
         _lineRenderer.positionCount = RayCount;
 
-        // Настройки материала для пунктирной линии
         _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         _lineRenderer.startWidth = 0.2f;
         _lineRenderer.endWidth = 0.2f;
@@ -70,7 +69,7 @@ private void Update()
         _lineRenderer.endColor = Color.white;
         _lineRenderer.textureMode = LineTextureMode.Tile;
 
-        float[] dashPattern = { 2f, 1f }; // длина сегментов и пробелов
+        float[] dashPattern = { 2f, 1f };
         _lineRenderer.material.mainTextureScale = new Vector2(1.0f / dashPattern[0], 1.0f);
 
         _lineRenderer.SetPosition(0, pos);

@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform _bottomLimit;
 
     public static GameManager Instance;
-    public Shooter shootScript; // чекнуть и исправить
+    public Shooter shootScript;
 
     private const int SEQUENCE_SIZE = 2;
     private const string StrDissolve = "_DissolveAmount";

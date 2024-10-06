@@ -17,7 +17,6 @@ public class Bubble : MonoBehaviour
             if (!IsFixed)
                 HasCollided();
         }
-        // добавить удаление шариков 
     }
 
     private void HasCollided()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Grid))]
 public class LevelManager : MonoBehaviour
@@ -26,6 +27,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject _ballPrefab3;
     [SerializeField] private GameObject _ballPrefab4;
     [SerializeField] private GameObject _winMenu;
+    [SerializeField] private GameObject _winScore;
 
     public Transform BubblesArea;
     public List<GameObject> BubblesInScene;
@@ -185,5 +187,7 @@ public class LevelManager : MonoBehaviour
         }
 
         _winMenu.SetActive(true);
+        ScoreManager scoreManager = ScoreManager.GetInstance();
+        _winScore.GetComponent<Text>().text = scoreManager.GetScore().ToString();
     }
 }

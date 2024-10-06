@@ -1883,7 +1883,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 10
+  m_Text: 15
 --- !u!222 &2037701772
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2573,6 +2573,7 @@ MonoBehaviour:
   _ballPrefab4: {fileID: 8501270715993923510, guid: a6d369e9c370e4a4bb5ad7cccb18a1c6,
     type: 3}
   _winMenu: {fileID: 2096565849}
+  _winScore: {fileID: 258896581}
   BubblesArea: {fileID: 6678577467237413802}
   BubblesInScene: []
   ColorsInScene: []

@@ -103,9 +103,9 @@ public class GameManager : MonoBehaviour
 
         if (LevelManager.instance.BubblesInScene.Count == 0)
         {
-            ScoreManager man = ScoreManager.GetInstance();
-            _winScore.GetComponent<Text>().text = man.GetScore().ToString();
             _winMenu.SetActive(true);
+            ScoreManager scoreManager = ScoreManager.GetInstance();
+            _winScore.GetComponent<Text>().text = scoreManager.GetScore().ToString();
         }
         else
         {

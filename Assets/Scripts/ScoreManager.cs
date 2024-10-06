@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ScoreManager
 {
 	private int _score = 0;
-	private int _throws = 10;
+	private int _throws = 15;
 
 	public static ScoreManager Instance;
 
@@ -36,7 +36,7 @@ public class ScoreManager
 
 	public int GetScore()
 	{
-		return _score;
+		return this._score;
 	}
 
 	public void ReduceThrows()
